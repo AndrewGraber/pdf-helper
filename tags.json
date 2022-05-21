@@ -1,0 +1,22 @@
+[
+	{
+		"tag": "[plea]",
+		"folder": "Pleadings/"
+	},
+	{
+		"tag": "[src]",
+		"folder": "Source Documents/"
+	},
+	{
+		"tag": "[corr]",
+		"folder": "Correspondence/"
+	},
+	{
+		"tag": "[disc]",
+		"folder": "Discovery/"
+	},
+	{
+		"tag": "[lit]",
+		"folder": "Litigation/"
+	}
+]
