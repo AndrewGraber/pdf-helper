@@ -2,6 +2,10 @@ import os
 import sys
 from lib.sexytable import SexyTable, ThemeExtra, ExtraThemes
 
+#########################################
+# Basic Terminal Manipulation Functions #
+#########################################
+
 def clear_screen():
     if os.name == 'posix':
         _ = os.system('clear')
@@ -14,6 +18,12 @@ def set_cursor(line, column):
 def print_at(line, column, text):
     sys.stdout.write("\x1b7\x1b[{};{}f{}\x1b8".format(line, column, text))
     sys.stdout.flush()
+    
+
+class Page:
+    def __init__(self, height=None, sections=None):
+        self.height = height or os.get_terminal_size().lines
+        self.sections = sections or {}
 
 #######################
 # SexyTable Functions #
