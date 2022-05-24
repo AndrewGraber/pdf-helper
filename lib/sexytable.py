@@ -1,4 +1,4 @@
-from prettytable.colortable import ColorTable, Theme, RESET_CODE
+from .prettytable_custom.colortable import ColorTable, Theme, RESET_CODE
 
 class ThemeExtra(Theme):
     def __init__(
@@ -49,8 +49,9 @@ class ExtraThemes:
 class SexyTable(ColorTable):
     def __init__(self, field_names=None, **kwargs):
         if 'theme' not in kwargs:
-            kwargs.set('theme', ExtraThemes.DEFAULT)
-        super().__init__(field_names=field_names, **kwargs)
+            super().__init__(field_names=field_names, theme=ExtraThemes.DEFAULT, **kwargs)
+        else:
+            super().__init__(field_names=field_names, **kwargs)
         self.theme = kwargs.get("theme") or ExtraThemes.DEFAULT
 
     def update_theme(self):

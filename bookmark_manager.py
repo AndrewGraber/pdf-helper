@@ -1,8 +1,7 @@
 import os
 import pikepdf
-from prettytable import SINGLE_BORDER
-from prettytable.colortable import ColorTable, Themes
-from lib.sexytable import SexyTable, ThemeExtra, ExtraThemes
+from lib.sexytable import SexyTable, ExtraThemes
+import display_helper as display
 
 file = None
 bookmarks = []
@@ -10,19 +9,29 @@ modified = False
 
 def get_file_from_user():
     pdfs = []
+
+    suffixes = ["B", "KiB", "MiB", "GiB"]
+    suffix_cursor = 0
     
-    table = SexyTable()
-    table.title = "Select a File"
-    table.field_names = ["Num", "File Name", "Size"]
+    table = display.make_table(
+        title = "Select a File",
+        field_names = ["Num", "File Name", "Size"],
+        theme = ExtraThemes.MENU,
+        align = "l"
+    )
+
     for filename in os.listdir('./'):
         if filename.lower().endswith(".pdf"):
             size = os.path.getsize(filename)
-            table.add_row([str(len(pdfs)+1), filename, str(size / 1024) + " KB"])
+            while size >= 1024:
+                size = size / 1024
+                suffix_cursor += 1
+                if suffix_cursor == len(suffixes)-1:
+                    break
+
+            table.add_row([str(len(pdfs)+1), filename, '{0:.2f}'.format(size) + " " + suffixes[suffix_cursor]])
             pdfs.append(filename)
 
-    table.set_style(SINGLE_BORDER)
-    table.theme = ExtraThemes.MENU
-    table.align = "l"
     print(table)
     selection = input("Choice (1-" + str(len(pdfs)) + "): ")
 
@@ -41,14 +50,18 @@ def find_existing_bookmarks(pdf):
     return bookmarks
     
 def list_bookmarks():
-    table = ColorTable(theme=Themes.OCEAN)
-    table.title = "Existing Bookmarks"
-    table.set_style(SINGLE_BORDER)
-    table.field_names = ["Num", "Bookmark Title", "Page"]
-    table.align = "l"
+    display.clear_screen()
+
+    table = display.make_table(
+        title = "Existing Bookmarks",
+        field_names = ["Num", "Bookmark Title", "Page"],
+        align = "l"
+    )
+
     for n, bookmark in enumerate(bookmarks):
         table.add_row([n, bookmark['title'], bookmark['page']])
-    print(table)
+    
+    display.print_centered_table_at(2, table)
     input("Press Enter to continue...")
     
 def add_bookmark():
@@ -84,11 +97,20 @@ menu_actions = [{'name': "Show Bookmarks", 'method': list_bookmarks},
 {'name': "Exit Bookmark Manager", 'method': program_exit}]
 
 def main_menu():
-    menu_table = SexyTable(theme=ExtraThemes.MENU)
-    menu_table.title = "Bookmark Manager Menu - " + file.filename
+    display.clear_screen()
+
+    menu_table = display.make_table(
+        title = "Bookmark Manager Menu - " + file.filename,
+        theme = ExtraThemes.MENU,
+        align = "l"
+    )
+
+    menu_table.header = False
+
     for n, action in enumerate(menu_actions):
         menu_table.add_row([n+1, action['name']])
-    menu_table.align = "l"
+
+    throwaway = menu_table.get_string()
     print(menu_table.get_string())
     choice = int(input("Select an Option (1-" + str(len(menu_actions)) + "): "))
     
