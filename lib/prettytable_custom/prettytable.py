@@ -44,6 +44,7 @@ from html.parser import HTMLParser
 
 import wcwidth
 
+
 # hrule styles
 FRAME = 0
 ALL = 1
@@ -1831,7 +1832,6 @@ class PrettyTable:
         return "".join(bits)
 
     def _stringify_title(self, title, options):
-
         lines = []
         lpad, rpad = self._get_padding_widths(options)
         if options["border"]:
@@ -1848,6 +1848,8 @@ class PrettyTable:
             else " "
         )
         bits.append(endpoint)
+        if type(self).__name__ == 'SexyTable' and self.bright_title: #SexyTable bright_title functionality
+            title = "\x1b[9" + self._theme.default_color[-2] + "m" + title + "\x1b[0m"
         title = " " * lpad + title + " " * rpad
         bits.append(self._justify(title, len(_ansi_escape.sub('', self._hrule)) - 2, "c"))
         bits.append(endpoint)

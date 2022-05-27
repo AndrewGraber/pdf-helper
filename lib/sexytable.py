@@ -45,6 +45,12 @@ class ExtraThemes:
         horizontal_color = "33",
         junction_color = "93"
     )
+    FILE_PICKER = ThemeExtra(
+        default_color = "37",
+        vertical_color = "32",
+        horizontal_color = "32",
+        junction_color = "92"
+    )
 
 class SexyTable(ColorTable):
     def __init__(self, field_names=None, **kwargs):
@@ -53,6 +59,7 @@ class SexyTable(ColorTable):
         else:
             super().__init__(field_names=field_names, **kwargs)
         self.theme = kwargs.get("theme") or ExtraThemes.DEFAULT
+        self.bright_title = kwargs.get("bright_title") or False
 
     def update_theme(self):
         super().update_theme()
